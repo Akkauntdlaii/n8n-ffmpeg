@@ -9,17 +9,14 @@ RUN if command -v apk > /dev/null; then \
         apt-get update && apt-get install -y ffmpeg && apt-get clean && rm -rf /var/lib/apt/lists/*; \
     fi
 
-# Устанавливаем yarn
-RUN npm install -g yarn
-
-# Очищаем кеши
+# Настраиваем npm
+RUN npm config set registry https://registry.npmjs.org/
 RUN npm cache clean --force
-RUN yarn cache clean
 
-# Устанавливаем пакеты через yarn
-RUN yarn global add @tavily/n8n-nodes-tavily
-RUN yarn global add n8n-nodes-ticktick
-RUN yarn global add @apify/n8n-nodes-apify
+# Устанавливаем пакеты с таймаутом и дополнительными флагами
+RUN npm install -g @tavily/n8n-nodes-tavily --timeout=60000
+RUN npm install -g n8n-nodes-ticktick --timeout=60000 --no-package-lock
+RUN npm install -g @apify/n8n-nodes-apify --timeout=60000
 
 USER node
 
