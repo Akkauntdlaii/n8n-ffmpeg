@@ -11,18 +11,12 @@ RUN if command -v apk > /dev/null; then \
 
 USER node
 
-# Создаем директорию для community нод (как указано в документации n8n)
-RUN mkdir -p ~/.n8n/nodes
+# Создаем директорию для community нод
+RUN mkdir -p /home/node/.n8n/nodes
 
-# Переходим в директорию для нод
-WORKDIR ~/.n8n/nodes
-
-# Устанавливаем community пакеты в правильную директорию
-RUN npm install @tavily/n8n-nodes-tavily
-RUN npm install n8n-nodes-ticktick  
-RUN npm install @apify/n8n-nodes-apify
-
-# Возвращаемся в рабочую директорию
-WORKDIR /usr/local/lib/node_modules/n8n
+# Устанавливаем community пакеты с правильным префиксом
+RUN npm install --prefix=/home/node/.n8n/nodes @tavily/n8n-nodes-tavily
+RUN npm install --prefix=/home/node/.n8n/nodes n8n-nodes-ticktick  
+RUN npm install --prefix=/home/node/.n8n/nodes @apify/n8n-nodes-apify
 
 EXPOSE 5678
