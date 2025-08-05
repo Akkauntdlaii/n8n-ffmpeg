@@ -1,5 +1,6 @@
 FROM n8nio/n8n:latest
 
+# Force rebuild - Aug 5 2025
 USER root
 
 # Универсальная установка ffmpeg
@@ -12,11 +13,15 @@ RUN if command -v apk > /dev/null; then \
 USER node
 
 # Создаем директорию для community нод
-RUN mkdir -p /home/node/.n8n/nodes
+RUN mkdir -p ~/.n8n/nodes
 
-# Устанавливаем community пакеты с правильным префиксом
-RUN npm install --prefix=/home/node/.n8n/nodes @tavily/n8n-nodes-tavily
-RUN npm install --prefix=/home/node/.n8n/nodes n8n-nodes-ticktick  
-RUN npm install --prefix=/home/node/.n8n/nodes @apify/n8n-nodes-apify
+WORKDIR ~/.n8n/nodes
+
+# Устанавливаем пакеты локально
+RUN npm install @tavily/n8n-nodes-tavily
+RUN npm install n8n-nodes-ticktick  
+RUN npm install @apify/n8n-nodes-apify
+
+WORKDIR /usr/local/lib/node_modules/n8n
 
 EXPOSE 5678
