@@ -19,11 +19,19 @@ if [ ! -f "package.json" ]; then
     npm install @apify/n8n-nodes-apify || echo "Apify failed"
     
     echo "Ноды установлены!"
-else
-    echo "Ноды уже установлены, пропускаем установку"
+    
+    # ВАЖНО: устанавливаем права доступа
+    chown -R node:node /home/node/.n8n/nodes
+    
+    echo "Права доступа установлены"
 fi
 
-# Возвращаемся в home и запускаем n8n
+# Возвращаемся в home 
 cd /home/node
-echo "Запускаем n8n..."
+
+# КЛЮЧЕВОЙ МОМЕНТ: передаем переменные окружения для обнаружения нод
+export N8N_CUSTOM_EXTENSIONS=/home/node/.n8n
+export N8N_COMMUNITY_PACKAGES_ENABLED=true
+
+echo "Запускаем n8n с переменными окружения..."
 exec n8n
