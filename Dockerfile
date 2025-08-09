@@ -13,9 +13,12 @@ RUN if command -v apk > /dev/null; then \
 COPY install-nodes.sh /install-nodes.sh
 RUN chmod +x /install-nodes.sh
 
+# ВАЖНО: добавляем переменные окружения для обнаружения нод
+ENV N8N_CUSTOM_EXTENSIONS=/home/node/.n8n
+ENV N8N_COMMUNITY_PACKAGES_ENABLED=true
+
 USER node
 
 EXPOSE 5678
 
-# Используем наш скрипт как точку входа вместо обычного n8n
 ENTRYPOINT ["/install-nodes.sh"]
